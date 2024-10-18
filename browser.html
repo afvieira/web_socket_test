@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Example</title>
+</head>
+<body>
+<h1>WebSocket Browser Example</h1>
+
+<!-- Input field for the user to type a message -->
+<input type="text" id="messageInput" placeholder="Type your message here" />
+
+<!-- Button to send the message to the WebSocket server -->
+<button id="sendButton">Send Message to Server</button>
+
+<!-- Paragraph to show the connection status and server response -->
+<p id="status"></p>
+
+<script>
+    // Connect to the WebSocket server at the path "/Browser"
+    const socket = new WebSocket("ws://localhost:9222/Browser");
+
+    socket.onopen = function(event) {
+        document.getElementById("status").innerText = "Connected to server";
+    };
+
+    socket.onmessage = function(event) {
+        document.getElementById("status").innerText = "Server says: " + event.data;
+    };
+
+    // Send the message from the input field to the WebSocket server when the button is clicked
+    document.getElementById("sendButton").onclick = function() {
+        const message = document.getElementById("messageInput").value;
+        if (message.trim() !== "") {
+            socket.send(message);
+        } else {
+            alert("Please enter a message.");
+        }
+    };
+
+    socket.onclose = function(event) {
+        document.getElementById("status").innerText = "Connection closed";
+    };
+</script>
+</body>
+</html>
